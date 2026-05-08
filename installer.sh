@@ -8,60 +8,68 @@ echo "==========================================="
 echo ""
 
 PLUGIN="PhotoBrowser"
-VERSION="1.0"
 REPO="theking-cs/PhotoBrowser"
 BRANCH="main"
 
 TMP="/tmp/$PLUGIN"
 
-# Clean temp
 rm -rf $TMP
 mkdir -p $TMP
 
 cd /tmp || exit 1
 
-echo "[1/5] Downloading PhotoBrowser v$VERSION ..."
+echo "[1/6] Downloading package..."
 
 wget --no-check-certificate -O photobrowser.zip https://github.com/$REPO/archive/refs/heads/$BRANCH.zip
 
 if [ $? -ne 0 ]; then
-    echo ""
-    echo "ERROR: Download failed!"
+    echo "ERROR: Download failed"
     exit 1
 fi
 
-echo "[2/5] Extracting package..."
+echo "[2/6] Checking unzip..."
 
-unzip -o photobrowser.zip > /dev/null
+if ! command -v unzip >/dev/null 2>&1; then
+    echo "Installing unzip..."
+    opkg update
+    opkg install unzip
+fi
+
+echo "[3/6] Extracting..."
+
+unzip -o photobrowser.zip
 
 if [ $? -ne 0 ]; then
-    echo ""
-    echo "ERROR: Extraction failed!"
+    echo "ERROR: unzip failed"
     exit 1
 fi
 
-echo "[3/5] Installing dependencies..."
+echo "[4/6] Installing dependencies..."
 
-opkg update > /dev/null 2>&1
+opkg update
 
-# Python3 Pillow
-opkg install python3-pillow > /dev/null 2>&1
+opkg install python3-pillow
+opkg install python-pillow
 
-# Python2 fallback
-opkg install python-pillow > /dev/null 2>&1
+echo "[5/6] Installing plugin..."
 
-echo "[4/5] Installing plugin files..."
-
-cp -r PhotoBrowser-main/usr/* /usr/
+if [ -d PhotoBrowser-main ]; then
+    cp -r PhotoBrowser-main/usr/* /usr/
+else
+    echo "ERROR: Folder PhotoBrowser-main not found"
+    ls -l
+    exit 1
+fi
 
 chmod -R 755 /usr/lib/enigma2/python/Plugins/Extensions/PhotoBrowser
 
 sync
 
-echo "[5/5] Restarting Enigma2..."
+echo "[6/6] Restart Enigma2..."
 
 sleep 2
-
 killall -9 enigma2
 
+echo ""
+echo "Installation completed!"
 exit 0
