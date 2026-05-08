@@ -5,34 +5,38 @@ URL_BASE="https://raw.githubusercontent.com/theking-cs/Photobrowser/main"
 PLUGIN_PATH="/usr/lib/enigma2/python/Plugins/Extensions/Photobrowser"
 
 echo "================================================="
-echo "   INSTALADOR COMPLETO PHOTOBROWSER v1.1"
+echo "   INSTALADOR DE PHOTOBROWSER v1.1"
 echo "================================================="
 
-# 1. CREAR ESTRUCTURA
-echo "> Creando carpetas..."
-mkdir -p $PLUGIN_PATH/img
+# 1. CREAR CARPETA
+echo "> Preparando directorio en $PLUGIN_PATH..."
+mkdir -p $PLUGIN_PATH
 
-# 2. DESCARGAR ARCHIVOS PRINCIPALES
-echo "> Descargando archivos base..."
-wget -q --no-check-certificate "$URL_BASE/plugin.py" -O "$PLUGIN_PATH/plugin.py"
-wget -q --no-check-certificate "$URL_BASE/__init__.py" -O "$PLUGIN_PATH/__init__.py"
+# 2. LISTA DE ARCHIVOS A DESCARGAR
+# Añadimos plugin.png a la lista
+archivos="plugin.py __init__.py plugin.png"
 
-# 3. DESCARGAR IMÁGENES
-echo "> Descargando recursos visuales..."
-wget -q --no-check-certificate "$URL_BASE/img/icono.png" -O "$PLUGIN_PATH/img/icono.png"
-wget -q --no-check-certificate "$URL_BASE/img/background.jpg" -O "$PLUGIN_PATH/img/background.jpg"
+for file in $archivos; do
+    echo "> Descargando $file..."
+    wget -q --no-check-certificate "$URL_BASE/$file" -O "$PLUGIN_PATH/$file"
+done
+
+# 3. VERIFICACIÓN Y PERMISOS
+chmod -R 755 $PLUGIN_PATH
+
+if [ -f "$PLUGIN_PATH/plugin.png" ]; then
+    echo "> Icono plugin.png instalado correctamente."
+else
+    echo "> ADVERTENCIA: No se pudo descargar plugin.png (revisa si el nombre en GitHub es igual)."
+fi
 
 echo "================================================="
 echo "      INSTALACIÓN FINALIZADA"
 echo "================================================="
 
-# 4. PREGUNTA DE REINICIO CORREGIDA
-echo -e "\n¿Deseas reiniciar Enigma2 ahora? (s/n)"
-read confirm
-
+# 4. REINICIO
+echo ""
+read -p "¿Reiniciar Enigma2 ahora? (s/n): " confirm
 if [ "$confirm" = "s" ] || [ "$confirm" = "S" ]; then
-    echo "> Reiniciando interfaz..."
     killall -9 enigma2
-else
-    echo "> Instalación terminada. Reinicia manualmente para ver el plugin."
 fi
