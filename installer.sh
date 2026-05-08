@@ -1,18 +1,18 @@
 #!/bin/sh
 
 echo "********************************************************"
-echo "* Installing PhotoBrowser v1.0 - theking-cs           *"
+echo "* Installing Photobrowser v1.0 - theking-cs           *"
 echo "********************************************************"
 
-PLUGIN_NAME="PhotoBrowser"
+PLUGIN_NAME="Photobrowser"
 PLUGIN_PATH="/usr/lib/enigma2/python/Plugins/Extensions/$PLUGIN_NAME"
 
 rm -rf $PLUGIN_PATH
-rm -rf /tmp/PhotoBrowser.zip
-rm -rf /tmp/PhotoBrowser-main
+rm -rf /tmp/Photobrowser.zip
+rm -rf /tmp/Photobrowser-main
 
 echo "> Downloading from GitHub..."
-wget --no-check-certificate https://github.com/theking-cs/PhotoBrowser/archive/refs/heads/main.zip -O /tmp/PhotoBrowser.zip
+wget --no-check-certificate https://github.com/theking-cs/Photobrowser/archive/refs/heads/main.zip -O /tmp/Photobrowser.zip
 
 if [ $? -ne 0 ]; then
     echo "Download failed!"
@@ -20,15 +20,15 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "> Extracting..."
-unzip -q /tmp/PhotoBrowser.zip -d /tmp/
+unzip -q /tmp/Photobrowser.zip -d /tmp/
 
 echo "> Installing plugin..."
-mv /tmp/PhotoBrowser-main $PLUGIN_PATH
+mv /tmp/Photobrowser-main $PLUGIN_PATH
 
 echo "> Setting permissions..."
 chmod -R 755 $PLUGIN_PATH
 
-rm -rf /tmp/PhotoBrowser.zip
+rm -rf /tmp/Photobrowser.zip
 
 echo "********************************************************"
 echo "* INSTALLATION COMPLETE - RESTARTING ENIGMA2         *"
