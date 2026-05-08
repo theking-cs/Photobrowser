@@ -1,75 +1,39 @@
 #!/bin/sh
 
-echo ""
-echo "==========================================="
-echo "   PhotoBrowser Installer v1.0"
-echo "   Author: theking-cs"
-echo "==========================================="
-echo ""
+echo "********************************************************"
+echo "* Installing PhotoBrowser v1.0 - theking-cs           *"
+echo "********************************************************"
 
-PLUGIN="PhotoBrowser"
-REPO="theking-cs/PhotoBrowser"
-BRANCH="main"
+PLUGIN_NAME="PhotoBrowser"
+PLUGIN_PATH="/usr/lib/enigma2/python/Plugins/Extensions/$PLUGIN_NAME"
 
-TMP="/tmp/$PLUGIN"
+rm -rf $PLUGIN_PATH
+rm -rf /tmp/PhotoBrowser.zip
+rm -rf /tmp/PhotoBrowser-main
 
-rm -rf $TMP
-mkdir -p $TMP
-
-cd /tmp || exit 1
-
-echo "[1/6] Downloading package..."
-
-wget --no-check-certificate -O photobrowser.zip https://github.com/$REPO/archive/refs/heads/$BRANCH.zip
+echo "> Downloading from GitHub..."
+wget --no-check-certificate https://github.com/theking-cs/PhotoBrowser/archive/refs/heads/main.zip -O /tmp/PhotoBrowser.zip
 
 if [ $? -ne 0 ]; then
-    echo "ERROR: Download failed"
+    echo "Download failed!"
     exit 1
 fi
 
-echo "[2/6] Checking unzip..."
+echo "> Extracting..."
+unzip -q /tmp/PhotoBrowser.zip -d /tmp/
 
-if ! command -v unzip >/dev/null 2>&1; then
-    echo "Installing unzip..."
-    opkg update
-    opkg install unzip
-fi
+echo "> Installing plugin..."
+mv /tmp/PhotoBrowser-main $PLUGIN_PATH
 
-echo "[3/6] Extracting..."
+echo "> Setting permissions..."
+chmod -R 755 $PLUGIN_PATH
 
-unzip -o photobrowser.zip
+rm -rf /tmp/PhotoBrowser.zip
 
-if [ $? -ne 0 ]; then
-    echo "ERROR: unzip failed"
-    exit 1
-fi
+echo "********************************************************"
+echo "* INSTALLATION COMPLETE - RESTARTING ENIGMA2         *"
+echo "********************************************************"
 
-echo "[4/6] Installing dependencies..."
-
-opkg update
-
-opkg install python3-pillow
-opkg install python-pillow
-
-echo "[5/6] Installing plugin..."
-
-if [ -d PhotoBrowser-main ]; then
-    cp -r PhotoBrowser-main/usr/* /usr/
-else
-    echo "ERROR: Folder PhotoBrowser-main not found"
-    ls -l
-    exit 1
-fi
-
-chmod -R 755 /usr/lib/enigma2/python/Plugins/Extensions/PhotoBrowser
-
-sync
-
-echo "[6/6] Restart Enigma2..."
-
-sleep 2
 killall -9 enigma2
 
-echo ""
-echo "Installation completed!"
 exit 0
