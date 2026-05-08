@@ -9,34 +9,34 @@ echo "   INSTALADOR DE PHOTOBROWSER v1.1"
 echo "================================================="
 
 # 1. CREAR CARPETA
-echo "> Preparando directorio en $PLUGIN_PATH..."
+echo "> Preparando carpeta del plugin..."
 mkdir -p $PLUGIN_PATH
 
-# 2. LISTA DE ARCHIVOS A DESCARGAR
+# 2. DESCARGAR ARCHIVOS UNO A UNO
 # Añadimos plugin.png a la lista
-archivos="plugin.py __init__.py plugin.png"
+echo "> Descargando componentes..."
 
-for file in $archivos; do
-    echo "> Descargando $file..."
+files="plugin.py __init__.py plugin.png"
+
+for file in $files; do
+    echo "  Descargando $file..."
     wget -q --no-check-certificate "$URL_BASE/$file" -O "$PLUGIN_PATH/$file"
 done
 
-# 3. VERIFICACIÓN Y PERMISOS
+# 3. PERMISOS
 chmod -R 755 $PLUGIN_PATH
 
-if [ -f "$PLUGIN_PATH/plugin.png" ]; then
-    echo "> Icono plugin.png instalado correctamente."
-else
-    echo "> ADVERTENCIA: No se pudo descargar plugin.png (revisa si el nombre en GitHub es igual)."
-fi
-
 echo "================================================="
-echo "      INSTALACIÓN FINALIZADA"
+echo "      INSTALACIÓN FINALIZADA CON ÉXITO"
 echo "================================================="
 
-# 4. REINICIO
+# 4. REINICIO DEL GUI
 echo ""
-read -p "¿Reiniciar Enigma2 ahora? (s/n): " confirm
+read -p "¿Deseas reiniciar Enigma2 para ver el icono? (s/n): " confirm
+
 if [ "$confirm" = "s" ] || [ "$confirm" = "S" ]; then
+    echo "> Reiniciando interfaz..."
     killall -9 enigma2
+else
+    echo "> Instalación terminada. Recuerda reiniciar más tarde."
 fi
