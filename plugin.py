@@ -15,7 +15,7 @@ dh = getDesktop(0).size().height()
 # -------------------------------------------------------
 # EXPLORADOR DE FOTOS (NAVEGACIÓN TOTAL)
 # -------------------------------------------------------
-class PhotoBrowserScreen(Screen):
+class PhotobrowserScreen(Screen):
     skin = """
     <screen name="PhotoBrowser" position="center,center" size="1200,720" title="Photo Browser Gallery" backgroundColor="#101010" flags="wfNoBorder">
         <eLabel position="0,0" size="380,720" backgroundColor="#1a1a1a" zPosition="-1" />
@@ -266,7 +266,7 @@ class FullScreenImage(Screen):
 # REGISTRO DEL PLUGIN (CON ICONO)
 # -------------------------------------------------------
 def main(session, **kwargs):
-    session.open(PhotoBrowserScreen)
+    session.open(PhotobrowserScreen)
 
 def Plugins(**kwargs):
     path = os.path.dirname(__file__)
@@ -275,7 +275,7 @@ def Plugins(**kwargs):
         icon_file = None
 
     return PluginDescriptor(
-        name="PhotoBrowser", 
+        name="Photobrowser", 
         description="Browse photos (HDD/USB/Root) with Zoom & Rotate", 
         where=PluginDescriptor.WHERE_PLUGINMENU, 
         icon=icon_file,
